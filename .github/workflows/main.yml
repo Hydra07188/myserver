@@ -1,10 +1,13 @@
 name: main
 on: [push]
 jobs: 
- build: 
+ print-text: 
   runs-on: ubuntu-latest
   steps:
-  - uses: actions/checkout@v2
-  - uses: actions/setup-node@v1
-  - run: npm install -g bats
-  - run: bats -v
+  - name: Checkout code
+  - uses: action/checkout@v4
+
+  -name: Print text from index
+   run: cat dist/index.js
+   
+  
