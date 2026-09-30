@@ -5,7 +5,7 @@ jobs:
   runs-on: ubuntu-latest
   steps:
   - name: Checkout code
-  - uses: action/checkout@v4
+  - uses: actions/checkout@v4
 
   -name: Print text from index
    run: cat dist/index.js
