@@ -7,7 +7,7 @@ jobs:
   - name: Checkout code
   - uses: actions/checkout@v4
 
-  -name: Print text from index
-   run: cat dist/index.js
+  - name: Print text from index
+    run: cat dist/index.js
    
   
