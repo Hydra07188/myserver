@@ -1,4 +1,4 @@
-const utils = require('./Utils').utils;
+const utils = require('./Utils.ts').utils;
 const unit_test = async ()=> {
     if(utils.add(2, 3) === 5)
         {
