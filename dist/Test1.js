@@ -1,7 +1,7 @@
 "use strict";
 const utils = require('./Utils');
 const unit_test = async () => {
-    if (utils.add(2, 2) === 5) {
+    if (utils.add(2, 3) === 5) {
     }
     else {
         console.log("test case 1: utils.add(2,3)===5");
