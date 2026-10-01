@@ -13,5 +13,5 @@ jobs:
      node-version: '26'
       
   - name: Run Test1
-    run: node dist/Test1.ts
+    run: node src/Test1.ts
   
