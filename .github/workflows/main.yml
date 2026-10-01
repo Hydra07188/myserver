@@ -1,13 +1,16 @@
 name: main
 on:
-jobs: 
- print-text: 
-  runs-on: ubuntu-latest
-  steps:
-  - name: Checkout code
-    uses: actions/checkout@v2
+jobs:
+job1:
+runs-on: ubuntu-latest
 
-  - name: Print text from index
-    run: cat dist/index.js
-   
+steps:
+ - name: Checkout code
+   uses: actions/checkout@v2
+ - name: Setup Node.js
+   uses: actions/setup-node@v2
+   with:
+     node-version: '14'
+ - name: Run Test1
+   run: node dist/Test1.js
   
