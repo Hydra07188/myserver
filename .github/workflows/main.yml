@@ -1,5 +1,5 @@
 name: main
-on: [push]
+on:
 jobs: 
  print-text: 
   runs-on: ubuntu-latest
