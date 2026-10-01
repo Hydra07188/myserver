@@ -3,10 +3,10 @@ return "Hello, world";
 }
 
 function add(a:number,b:number):number{
-return a - b;
+return a + b;
 }
 
-export const utils = {
+exports.utils = {
     hello,
     add
 }
