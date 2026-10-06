@@ -1,0 +1,35 @@
+{
+  "info": {
+    "name": "myserver users",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create user",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript",
+        "exec": ["pm.collectionVariables.set('id', pm.response.json()._id);"] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"A\",\n  \"email\": \"a@hotmail.com\",\n  \"password\": \"1234\"\n}" },
+        "url": "{{baseUrl}}/api/users"
+      }
+    },
+    { "name": "Get all users", "request": { "method": "GET", "url": "{{baseUrl}}/api/users" } },
+    { "name": "Get user by id", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/{{id}}" } },
+    {
+      "name": "Update user",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"B\"\n}" },
+        "url": "{{baseUrl}}/api/users/{{id}}"
+      }
+    },
+    { "name": "Delete user", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/{{id}}" } }
+  ]
+}

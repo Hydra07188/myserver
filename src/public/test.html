@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<body>
+  <h1>Add New User</h1>
+  <input id="name" placeholder="name">
+  <input id="email" placeholder="email">
+  <input id="password" type="password" placeholder="password">
+  <button onclick="add()">Add</button>
+  <pre id="out"></pre>
+  <script>
+    async function add() {
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.value, email: email.value, password: password.value,
+        }),
+      });
+      out.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+  </script>
+</body>
+</html>

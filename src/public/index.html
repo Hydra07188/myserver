@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Users</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+    h1 { margin-bottom: 1rem; }
+    form { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: .5rem; margin-bottom: 1rem; }
+    input { padding: .5rem; border: 1px solid #bbb; border-radius: 6px; min-width: 0; }
+    button { padding: .5rem .8rem; border: 0; border-radius: 6px; background: #0a7d3b; color: #fff; cursor: pointer; }
+    button.secondary { background: #666; }
+    button.danger { background: #c62828; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #ddd; }
+    td.actions { white-space: nowrap; text-align: right; }
+    #msg { min-height: 1.5rem; color: #c62828; }
+    @media (max-width: 560px) { form { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Users</h1>
+  <form id="form">
+    <input id="name" placeholder="name" required>
+    <input id="email" type="email" placeholder="email" required>
+    <input id="password" type="password" placeholder="password">
+    <button id="submit">Add</button>
+  </form>
+  <button id="cancel" class="secondary" hidden>Cancel edit</button>
+  <p id="msg"></p>
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th></th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <script>
+    const API = '/api/users';
+    const $ = (id) => document.getElementById(id);
+    let editingId = null;
+
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    async function api(url, method = 'GET', body) {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    }
+
+    async function load() {
+      try {
+        const users = await api(API);
+        $('rows').innerHTML = users.map((u) => `
+          <tr>
+            <td>${esc(u.name)}</td>
+            <td>${esc(u.email)}</td>
+            <td class="actions">
+              <button class="secondary" onclick="startEdit('${u._id}','${esc(u.name)}','${esc(u.email)}')">Edit</button>
+              <button class="danger" onclick="remove('${u._id}')">Delete</button>
+            </td>
+          </tr>`).join('') || '<tr><td colspan="3">No users yet</td></tr>';
+      } catch (e) { $('msg').textContent = e.message; }
+    }
+
+    function startEdit(id, name, email) {
+      editingId = id;
+      $('name').value = name;
+      $('email').value = email;
+      $('password').value = '';
+      $('password').placeholder = 'new password (optional)';
+      $('password').required = false;
+      $('submit').textContent = 'Save';
+      $('cancel').hidden = false;
+    }
+
+    function resetForm() {
+      editingId = null;
+      $('form').reset();
+      $('password').placeholder = 'password';
+      $('password').required = true;
+      $('submit').textContent = 'Add';
+      $('cancel').hidden = true;
+    }
+
+    async function remove(id) {
+      if (!confirm('Delete this user?')) return;
+      try { await api(`${API}/${id}`, 'DELETE'); load(); }
+      catch (e) { $('msg').textContent = e.message; }
+    }
+
+    $('cancel').onclick = resetForm;
+    $('form').onsubmit = async (ev) => {
+      ev.preventDefault();
+      $('msg').textContent = '';
+      const body = { name: $('name').value, email: $('email').value };
+      if ($('password').value) body.password = $('password').value;
+      try {
+        if (editingId) await api(`${API}/${editingId}`, 'PUT', body);
+        else await api(API, 'POST', body);
+        resetForm();
+        load();
+      } catch (e) { $('msg').textContent = e.message; }
+    };
+
+    $('password').required = true;
+    load();
+  </script>
+</body>
+</html>
