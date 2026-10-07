@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@5
         with:
-          images: ditchaphon/test: latest
+          images: ditchaphon/test1: latest
 
       - name: Build and push Docker image
         id: push
@@ -51,6 +51,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest@v4
         with:
-          subject-name: index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
+          subject-name: index.docker.io/ditchaphon/test1: latest
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
